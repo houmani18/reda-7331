@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>formulaire</title>
+    <style>
+        body{
+            background: #dfdfdf;
+        }
+        input[type="text"],textarea{
+            border: none;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="form">
+        <form action="" name="f1">
+            <div>
+                <label for="">Code Projet </label>
+                <input type="text" id="code" onkeyup="validcode()">
+            </div>
+            <div>
+                <label for="">Libelle Projet </label>
+                <input type="text" id="libelle" onkeyup="validlible()">
+            </div>
+            <div>
+                <label for="">Description </label>
+                <textarea  id="description" cols="30" rows="10" onkeyup="validdescription()"></textarea>
+            </div>
+            <div>
+                <label for="">Nature Projet </label>
+                <select id="nature">
+                    <option value="Informatique">Informatique</option>
+                    <option value="Mécanique">Mecanique</option>
+                    <option value="Electrique">Electrique</option>
+                    <option value="Construction-Batiment">Construction-Batiment</option>
+                </select>
+            </div>
+            <div>
+                <label for="">Type Projet </label>
+                <input type="radio" name="ibi" id='interne' value="interne" checked>Interne
+                <input type="radio" name="ibi" id='externe' value="externe">Externe
+            </div>
+            <div>
+                <label for="">Ressorces </label>
+                <input type="checkbox" id="humain"  value="Humain">Humain 
+                <input type="checkbox" id="equipement"  value="Equipement">Equipement <br>
+                <input type="checkbox" id="transport"  value="Transport">Transport
+                <input type="checkbox" id="logiciel"  value="Logiciel">Logiciel
+            </div>
+            <div>
+                <label for="">Date Debut </label>
+                <input type="date" id="date_debut">
+            </div>
+            <div>
+                <label for="">Date Fin </label>
+                <input type="date" id="date_fin" onchange="validDATE()">
+            </div>
+            <div>
+                <label for="">Budget </label>
+                <input type="text" id="budget" onkeyup="validbudge()">
+            </div>
+            <div>
+                <input type="button" value="ajouter" onclick="ajouter()">
+                <input type="button" value="supprimer" onclick="supprimer()">
+                <input type="button" value="afficher" onclick="afficher()">
+                <input type="button" value="modifier" onclick="modifier()">
+                <input type="button" value="Chercher" onclick="chercher()">
+            </div>
+            <div>
+                <input type="button" value="<<" id="firstIndex" onclick="firstindex()">
+                <input type="button" value=">" id="nextIndex" onclick="nextindex()">
+                <input type="button" value="<" id="backIndex" onclick="backindex()">
+                <input type="button" value=">>" id="lastIndex" onclick="lastindex()">
+            </div>
+        </form>
+        <table style="width: 80%;" border="">
+            <tr>
+                <th >Code</th>
+                <th >Libelle</th>
+                <th >Description</th>
+                <th >Nature de projet</th>
+                <th >type de projets</th>
+                <th >ressources</th>
+                <th >date debut</th>
+                <th >date Fin</th>
+                <th >Budget</th>
+            </tr>
+            
+            <tbody id="afficher">
+            </tbody>
+        </table>
+    </div>
+    <script>
+        
+        function validcode(){
+            let code=document.getElementById('code');
+            let v=/^[A-Z]{1}\d{3}$/
+            if(v.test(code.value)){
+                code.style.border='3px solid green'
+                return true
+            }else{
+                code.style.border='3px solid red'
+                return false
+            }
+        }
+
+        function validlible(){
+            let libelle =document.getElementById('libelle');
+            let v=/^[A-Za-z0-9 ]+$/
+            if(v.test(libelle.value)){
+                libelle.style.border='3px solid green'
+                return true
+            }else{
+                libelle.style.border='3px solid red'
+                return false
+            }
+        }
+
+        function validdescription(){
+            let desc=document.getElementById('description');
+            let v=/^[A-Za-z0-9.,' ]+$/
+            if(v.test(desc.value)){
+                desc.style.border='3px solid green'
+                return true
+            }else{
+                desc.style.border='3px solid red'
+                return false
+            }
+        }
+
+        function validbudge(){
+            let budget=document.getElementById('budget');
+            let v=/^\d+\.?\d+$/
+            if(v.test(budget.value)){
+                budget.style.border='3px solid green'
+                return true
+            }else{
+                budget.style.border='3px solid red'
+                return false
+            }
+        }
+
+        function validDATE(){
+            let date_debut=document.getElementById('date_debut');
+            let date_fin=document.getElementById('date_fin');
+            if(date_debut.value < date_fin.value){
+                date_debut.style.border='3px solid green'
+                date_fin.style.border='3px solid green'
+                return true
+            }else{
+                date_fin.style.border='3px solid red'
+                date_fin.value=''
+                return false
+            }
+        }
+
+
+
+        let table={"list":[]};
+
+        function ajouter(){
+            let cod =document.getElementById('code').value;
+            let libelle =document.getElementById('libelle').value;
+            let desc=document.getElementById('description').value;
+            let nature=document.getElementById('nature').value;
+            let type=document.f1.ibi.value;
+            let Ressorces=''
+            if(document.getElementById('humain').checked){
+                Ressorces+=document.getElementById('humain').value+" | ";
+            }
+            if(document.getElementById('equipement').checked){
+                 Ressorces+=document.getElementById('equipement').value+" | ";
+            }
+            if(document.getElementById('transport').checked){
+                Ressorces+=document.getElementById('transport').value+" | ";
+            }
+            if(document.getElementById('logiciel').checked){
+                Ressorces+=document.getElementById('logiciel').value+" | ";
+            }
+            let date_debut=document.getElementById('date_debut').value;
+            let date_fin=document.getElementById('date_fin').value;
+            let budget=document.getElementById('budget').value;
+
+            for(var i=0;i<table.list.length;i++){
+                if(table.list[i].code===cod){
+                    alert("code d'article existe déja");
+                    return false
+                }
+            }
+
+            let h={"code":cod,"libelle":libelle,"description":desc,"nature":nature,"type":type,"Ressorces":Ressorces,"date_debut":date_debut,"date_fin":date_fin,"budget":budget};
+            table.list.push(h)
+
+            alert("projet est ajouter")
+            clear()
+                
+        }
+
+
+        function supprimer(){
+            let code = prompt("Donnez le code :");
+            for (let i = 0; i < table.list.length; i++){
+                if (table.list[i].code === code){
+                    table.list.splice(i, 1);
+                    alert("Le projet a été supprimé.");
+                    break;
+                }else{
+                    alert("n'est pas supprimé.")
+                }
+            }
+            afficher();
+        }
+
+        function afficher(){
+            let afficher=document.getElementById('afficher');
+            let html=''
+            for(let i=0;i<table.list.length;i++){
+                html+=`                
+                <tr>
+                    <td>${table.list[i].code}</td>
+                    <td>${table.list[i].libelle}</td>
+                    <td>${table.list[i].description}</td>
+                    <td>${table.list[i].nature}</td>
+                    <td>${table.list[i].type}</td>
+                    <td>${table.list[i].Ressorces}</td>
+                    <td>${table.list[i].date_debut}</td>
+                    <td>${table.list[i].date_fin}</td>
+                    <td>${table.list[i].budget}</td>
+                </tr>`
+            }
+            afficher.innerHTML=html
+        }
+
+
+        function modifier(){
+            let libelle =document.getElementById('libelle').value;
+            let desc=document.getElementById('description').value;
+            let nature=document.getElementById('nature').value;
+            let type=document.f1.ibi.value;
+            let Ressorces=''
+            if(document.getElementById('humain').checked){
+                Ressorces+=document.getElementById('humain').value+" | ";
+            }
+            if(document.getElementById('equipement').checked){
+                 Ressorces+=document.getElementById('equipement').value+" | ";
+            }
+            if(document.getElementById('transport').checked){
+                Ressorces+=document.getElementById('transport').value+" | ";
+            }
+            if(document.getElementById('logiciel').checked){
+                Ressorces+=document.getElementById('logiciel').value+" | ";
+            }
+            let date_debut=document.getElementById('date_debut').value;
+            let date_fin=document.getElementById('date_fin').value;
+            let budget=document.getElementById('budget').value;
+            let code =document.getElementById('code').value;
+            for(var i=0;i<table.list.length;i++){
+                if(table.list[i].code==code){
+                    let th={"code":code,"libelle":libelle,"description":desc,"nature":nature,"type":type,"Ressorces":Ressorces,"date_debut":date_debut,"date_fin":date_fin,"budget":budget};
+                    table.list[i]=th
+                    afficher()
+                    alert("Bien Modification.")
+                    break;
+                }else{
+                    alert("N'est pas Modification.")
+                }
+            }
+            
+        };
+
+        
+
+
+        function chercher(){
+            let code3=prompt("Donner le code a chercher")
+            for(var i=0;i<table.list.length;i++){
+                if(table.list[i].code==code3){
+                    alert(table.list[i].code+" | "+table.list[i].libelle+" | "+table.list[i].description+" | "+table.list[i].nature+" | "+table.list[i].type+" | "+table.list[i].Ressorces+" | "+table.list[i].date_debut+" | "+table.list[i].date_fin+" | "+table.list[i].budget)
+                }
+            } 
+        };
+
+
+
+
+
+
+
+
+        function clear(){
+            let libelle =document.getElementById('libelle').value=""
+            let desc=document.getElementById('description').value=''
+            let nature=document.getElementById('nature').value=''
+            let Ressorces=''
+            let date_debut=document.getElementById('date_debut').value=''
+            let date_fin=document.getElementById('date_fin').value=''
+            let budget=document.getElementById('budget').value=''
+            let code =document.getElementById('code').value=''
+        }
+
+
+
+
+
+
+
+
+        function titi(c){
+            document.getElementById('code').value = table.list[c].code
+            document.getElementById('libelle').value = table.list[c].libelle
+            document.getElementById('description').value = table.list[c].description
+            document.getElementById('nature').value = table.list[c].nature
+            document.f1.ibi.value = table.list[c].type
+
+            if(table.list[c].Ressorces.includes(document.getElementById('humain').value))
+                document.getElementById('humain').checked = true
+            else
+                document.getElementById('humain').checked = false
+            
+            if(table.list[c].Ressorces.includes(document.getElementById('equipement').value))
+                document.getElementById('equipement').checked = true
+            else
+                document.getElementById('equipement').checked = false
+
+            if(table.list[c].Ressorces.includes(document.getElementById('transport').value))
+                document.getElementById('transport').checked = true
+            else
+                document.getElementById('transport').checked = false
+            
+            if(table.list[c].Ressorces.includes(document.getElementById('logiciel').value))
+                document.getElementById('logiciel').checked = true
+            else
+                document.getElementById('logiciel').checked = false
+
+                
+            document.getElementById('date_debut').value = table.list[c].date_debut
+            document.getElementById('date_fin').value = table.list[c].date_fin
+            document.getElementById('budget').value = table.list[c].budget
+        }
+
+
+        c=0
+
+        function firstindex() {
+            c = 0;
+            titi(c)
+        }
+
+
+        function lastindex() {
+            c = table.list.length - 1;
+            titi(c)
+        }
+
+        function nextindex() {
+            if (c < table.list.length-1) {
+                c++;
+                titi(c)
+            }
+        }
+
+        function backindex() {
+            if (c > 0) {
+                c--;
+                titi(c)
+            }
+        }
+    </script>
+    
+</body>
+</html>
